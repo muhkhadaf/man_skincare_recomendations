@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}User Management - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-primary text-white border-0">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="mb-2">
+                                <i class="fas fa-users me-2"></i>
+                                User Management
+                            </h2>
+                            <p class="mb-0 opacity-75">
+                                Kelola pengguna sistem rekomendasi skincare
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <div class="d-flex gap-2 justify-content-md-end flex-wrap">
+                                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-light">
+                                    <i class="fas fa-arrow-left me-1"></i>Dashboard
+                                </a>
+                                <a href="{{ url_for('admin_products') }}" class="btn btn-outline-light">
+                                    <i class="fas fa-box me-1"></i>Produk
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="mb-0">
+                                <i class="fas fa-list me-2 text-primary"></i>
+                                Daftar Pengguna
+                            </h5>
+                        </div>
+                        <div class="col-auto">
+                            <span class="badge bg-primary">{{ users|length }} Total Users</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    {% if users %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="border-0 ps-4">ID</th>
+                                    <th class="border-0">Username</th>
+                                    <th class="border-0">Email</th>
+                                    <th class="border-0">Nama Lengkap</th>
+                                    <th class="border-0">Tanggal Daftar</th>
+                                    <th class="border-0 text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td class="ps-4">
+                                        <span class="badge bg-light text-dark">#{{ user.id }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-sm rounded-circle bg-primary text-white me-2">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <strong>{{ user.username }}</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted">{{ user.email }}</span>
+                                    </td>
+                                    <td>
+                                        {{ user.full_name or '-' }}
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            {% if user.created_at %}
+                                                {{ user.created_at.strftime('%Y-%m-%d') }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </small>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-success">Active</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <div class="mb-3">
+                            <i class="fas fa-users fa-3x text-muted"></i>
+                        </div>
+                        <h5 class="text-muted">Belum Ada Pengguna</h5>
+                        <p class="text-muted mb-0">Belum ada pengguna yang terdaftar dalam sistem.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Statistics -->
+    {% if users %}
+    <div class="row mt-4">
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="icon icon-shape bg-info text-white rounded-circle shadow mx-auto mb-3">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h5 class="mb-2">Total Pengguna</h5>
+                    <h3 class="text-info mb-0">{{ users|length }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="icon icon-shape bg-success text-white rounded-circle shadow mx-auto mb-3">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h5 class="mb-2">Pengguna Aktif</h5>
+                    <h3 class="text-success mb-0">{{ users|length }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="icon icon-shape bg-warning text-white rounded-circle shadow mx-auto mb-3">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h5 class="mb-2">Pengguna Baru</h5>
+                    <h3 class="text-warning mb-0">0</h3>
+                    <small class="text-muted">Hari ini</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.avatar {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.icon-shape {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+}
+</style>
+{% endblock %}
